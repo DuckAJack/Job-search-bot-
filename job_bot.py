@@ -12,28 +12,25 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 # 1. Scrape Jobs from Indeed
-def scrape_indeed_jobs():
+
+def scrape_jobs():
     url = "https://www.indeed.com/jobs?q=Cisco+Collaboration+Engineer&l=Brno"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching Indeed jobs: {e}")
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 403:
+        print("Access denied by Indeed, check headers or IP blocking.")
         return []
-
     soup = BeautifulSoup(response.text, 'html.parser')
+    
     jobs = []
-
     for job in soup.find_all('div', class_='job_seen_beacon'):
-        title_element = job.find('h2')
-        link_element = job.find('a', href=True)
-        
-        if title_element and link_element:
-            title = title_element.text.strip()
-            link = f"https://www.indeed.com{link_element['href']}"
-            jobs.append({'title': title, 'link': link})
-
+        title = job.find('h2').text
+        link = job.find('a')['href']
+        jobs.append({'title': title, 'link': link})
     return jobs
+
 
 # 2. Scrape Jobs from LinkedIn
 def scrape_linkedin_jobs():
