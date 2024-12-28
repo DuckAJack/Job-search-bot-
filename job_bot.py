@@ -1,15 +1,8 @@
-# jobsearchbot - Cisco Collaboration Engineer Job Scraper (LinkedIn + Indeed)
-
 import os
+from playwright.sync_api import sync_playwright
+import smtplib
 import requests
 from bs4 import BeautifulSoup
-import smtplib
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-import time
 
 # 1. Scrape Jobs from Indeed
 def scrape_indeed_jobs():
@@ -30,32 +23,23 @@ def scrape_indeed_jobs():
         jobs.append({'title': title, 'link': link})
     return jobs
 
-# 2. Scrape Jobs from LinkedIn
-# Set up Chrome options for headless mode
-options = Options()
-options.add_argument('--headless')  # Run Chrome in headless mode
-options.add_argument('--no-sandbox')  # Disable sandboxing for cloud environments
-options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
-
-# Specify the location of the Chromium binary (this path matches the one in Dockerfile)
-options.binary_location = '/usr/bin/chromium'
-
-# Initialize the Chrome WebDriver using WebDriver Manager (automatic driver version management)
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
+# 2. Scrape Jobs from LinkedIn using Playwright
 def scrape_linkedin_jobs():
-    driver.get("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
-    
-    # Your scraping logic here (example):
-    jobs = []
-    job_elements = driver.find_elements(By.CLASS_NAME, 'job-card-container')
-    for job in job_elements:
-        title = job.find_element(By.CLASS_NAME, 'job-card-list__title').text
-        link = job.find_element(By.TAG_NAME, 'a').get_attribute('href')
-        jobs.append({'title': title, 'link': link})
-    
-    driver.quit()
-    return jobs
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
+        
+        jobs = []
+        job_elements = page.query_selector_all('.job-card-container')
+        
+        for job in job_elements:
+            title = job.query_selector('.job-card-list__title').text_content()
+            link = job.query_selector('a').get_attribute('href')
+            jobs.append({'title': title, 'link': link})
+        
+        browser.close()
+        return jobs
 
 # 3. Filter Relevant Jobs
 def filter_jobs(jobs):
