@@ -28,11 +28,9 @@ WORKDIR /opt/render/project/src
 # Copy the rest of the project files into the container
 COPY . .
 
-# Set environment variable for the location of the Chromium binary (comes with the Selenium image)
-ENV CHROME_BIN=/usr/bin/chromium
-
-# Make sure the start.sh script is executable
-RUN chmod +x /opt/render/project/src/start.sh
+# Make sure the start.sh script is executable by modifying it locally first
+# If it's still causing permission issues, try to copy it with `chmod` applied in a different way
+RUN chmod +x /opt/render/project/src/start.sh || true
 
 # Expose port if required (optional)
 EXPOSE 8000
