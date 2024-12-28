@@ -12,7 +12,6 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 # 1. Scrape Jobs from Indeed
-
 def scrape_indeed_jobs():
     url = "https://www.indeed.com/jobs?q=Cisco+Collaboration+Engineer&l=Brno"
     headers = {
@@ -31,21 +30,8 @@ def scrape_indeed_jobs():
         jobs.append({'title': title, 'link': link})
     return jobs
 
-
-
 # 2. Scrape Jobs from LinkedIn
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-
-#ChromeDriver
-driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=chrome_version).install()), options=options)
 
 # Set up Chrome options for headless mode
 options = Options()
@@ -56,30 +42,22 @@ options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
 # Specify the location of the Chrome binary
 options.binary_location = '/usr/bin/chromium'  # Path to the Chromium binary in Docker
 
-# Start Chrome WebDriver
+# Initialize the Chrome WebDriver without specifying a version
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-
 def scrape_linkedin_jobs():
-    options = Options()
-    options.headless = True  # Use headless mode
-    options.add_argument('--no-sandbox')  # To avoid issues in restricted environments
-    options.add_argument('--disable-dev-shm-usage')  # To work around some Chromium issues
-
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
     
     # Your scraping logic here (example):
     jobs = []
-    job_elements = driver.find_elements_by_class_name('job-card-container')
+    job_elements = driver.find_elements(By.CLASS_NAME, 'job-card-container')
     for job in job_elements:
-        title = job.find_element_by_class_name('job-card-list__title').text
-        link = job.find_element_by_tag_name('a').get_attribute('href')
+        title = job.find_element(By.CLASS_NAME, 'job-card-list__title').text
+        link = job.find_element(By.TAG_NAME, 'a').get_attribute('href')
         jobs.append({'title': title, 'link': link})
     
     driver.quit()
     return jobs
-
 
 # 3. Filter Relevant Jobs
 def filter_jobs(jobs):
