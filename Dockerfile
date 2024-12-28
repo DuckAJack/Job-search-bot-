@@ -1,47 +1,41 @@
-# Use an official Python runtime as a parent image
+# Start with a Python base image
 FROM python:3.11-slim
 
-# Set the working directory in the container
-WORKDIR /opt/render/project/src
-
-# Install system dependencies for Chromium, Chromium Driver, and unzip
-RUN apt-get update && \
-    apt-get install -y \
+# Install required dependencies
+RUN apt-get update && apt-get install -y \
     wget \
-    ca-certificates \
+    curl \
     unzip \
     chromium \
-    chromium-driver \
-    libnss3 \
-    libgdk-pixbuf2.0-0 \
-    libx11-xcb1 \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Manually install the correct version of ChromeDriver
-RUN CHROMEDRIVER_VERSION=114.0.5735.90 && \
-    wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -O chromedriver.zip && \
-    unzip chromedriver.zip && \
-    mv chromedriver /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm chromedriver.zip
+# Install necessary libraries for headless Chrome
+RUN apt-get update && apt-get install -y \
+    libx11-dev \
+    libgconf-2-4 \
+    libnss3 \
+    libxcomposite1 \
+    libxdamage1 \
+    libfontconfig1 \
+    libglib2.0-0 \
+    libxrandr2 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies from the requirements file
-COPY requirements.txt ./
+# Set the environment variable for Chromium binary
+ENV CHROME_BIN=/usr/bin/chromium
+
+# Set the environment variable for the ChromeDriver path (optional)
+ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
+
+# Install pip dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the project files into the container
-COPY . .
+# Copy the job_bot.py script into the container
+COPY job_bot.py .
 
-# Set environment variables for the location of the Chromium binary and ChromeDriver
-ENV CHROME_BIN=/usr/bin/chromium
-ENV PATH="/usr/local/bin:${PATH}"
+# Expose port (if needed for other purposes, e.g., API calls)
+EXPOSE 5000
 
-# Expose port if required (optional)
-EXPOSE 8000
-
-# Run the Python script directly
+# Run the bot script
 CMD ["python", "job_bot.py"]
