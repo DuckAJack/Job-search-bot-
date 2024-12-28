@@ -8,3 +8,6 @@ webdriver-manager
 chromedriver-autoinstaller
 packaging
 python-dotenv
+requests
+beautifulsoup4
+playwright
