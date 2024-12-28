@@ -3,4 +3,5 @@ requests
 python-telegram-bot
 selenium
 webdriver-manager
-chromix-too
+chromium
+chromedriver
