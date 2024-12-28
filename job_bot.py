@@ -13,7 +13,7 @@ import time
 
 # 1. Scrape Jobs from Indeed
 
-def scrape_jobs():
+def scrape_indeed_jobs():
     url = "https://www.indeed.com/jobs?q=Cisco+Collaboration+Engineer&l=Brno"
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -30,6 +30,7 @@ def scrape_jobs():
         link = job.find('a')['href']
         jobs.append({'title': title, 'link': link})
     return jobs
+
 
 
 # 2. Scrape Jobs from LinkedIn
