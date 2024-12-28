@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies for Playwright
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
@@ -22,10 +22,10 @@ RUN apt-get update && apt-get install -y \
     libu2f-udev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the project files
+# Copy project files
 COPY . .
 
 # Install dependencies
@@ -34,7 +34,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install Playwright and its browsers
 RUN playwright install
 
-# Expose the necessary port
+# Expose port
 EXPOSE 8080
 
 # Command to run the bot
