@@ -21,6 +21,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Use the Selenium Standalone Chrome image
+FROM selenium/standalone-chrome:latest
+
+# Set the working directory
+WORKDIR /opt/render/project/src
+
 # Copy the rest of the project files into the container
 COPY . .
 
