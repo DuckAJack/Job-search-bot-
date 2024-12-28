@@ -33,42 +33,31 @@ def scrape_jobs():
 
 
 # 2. Scrape Jobs from LinkedIn
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
 def scrape_linkedin_jobs():
-    url = "https://www.linkedin.com/jobs/search/?keywords=Cisco%20Collaboration%20Engineer&location=Brno"
-    jobs = []
-    
-    # Setup Selenium WebDriver
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Run in background
+    options = Options()
+    options.headless = True  # Use headless mode
+    options.add_argument('--no-sandbox')  # To avoid issues in restricted environments
+    options.add_argument('--disable-dev-shm-usage')  # To work around some Chromium issues
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
     
-    try:
-        driver.get(url)
-        time.sleep(5)  # Let page load fully
-
-        # Scroll to load jobs
-        driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-        time.sleep(3)
-
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        job_elements = soup.find_all('div', class_='base-card')
-        
-        for job in job_elements:
-            title_element = job.find('h3')
-            link_element = job.find('a', href=True)
-            
-            if title_element and link_element:
-                title = title_element.text.strip()
-                link = link_element['href']
-                jobs.append({'title': title, 'link': link})
-
-    except Exception as e:
-        print(f"Error fetching LinkedIn jobs: {e}")
+    # Your scraping logic here (example):
+    jobs = []
+    job_elements = driver.find_elements_by_class_name('job-card-container')
+    for job in job_elements:
+        title = job.find_element_by_class_name('job-card-list__title').text
+        link = job.find_element_by_tag_name('a').get_attribute('href')
+        jobs.append({'title': title, 'link': link})
     
-    finally:
-        driver.quit()  # Close the browser
-    
+    driver.quit()
     return jobs
+
 
 # 3. Filter Relevant Jobs
 def filter_jobs(jobs):
