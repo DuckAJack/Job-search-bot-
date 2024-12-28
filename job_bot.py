@@ -43,10 +43,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 options = Options()
 options.add_argument('--headless')  # Run Chrome in headless mode
 options.add_argument('--no-sandbox')  # Disable sandboxing for cloud environments
+options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
+
+# Specify the location of the Chrome binary
+options.binary_location = '/usr/bin/chromium'  # Path to the Chromium binary
 
 # Start Chrome WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
 
 def scrape_linkedin_jobs():
     options = Options()
