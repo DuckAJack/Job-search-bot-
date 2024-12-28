@@ -1,14 +1,22 @@
 import os
-from playwright.sync_api import sync_playwright
-import smtplib
 import requests
 from bs4 import BeautifulSoup
+import smtplib
+import random
+from playwright.sync_api import sync_playwright
 
 # 1. Scrape Jobs from Indeed
+# Rotating User-Agent headers to bypass blocking
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+]
+
 def scrape_indeed_jobs():
     url = "https://www.indeed.com/jobs?q=Cisco+Collaboration+Engineer&l=Brno"
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': random.choice(USER_AGENTS)
     }
     response = requests.get(url, headers=headers)
     if response.status_code == 403:
@@ -29,6 +37,9 @@ def scrape_linkedin_jobs():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
+        
+        # Wait for the job elements to be visible
+        page.wait_for_selector('.job-card-container')
         
         jobs = []
         job_elements = page.query_selector_all('.job-card-container')
