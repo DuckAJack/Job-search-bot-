@@ -40,8 +40,8 @@ options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
 # Specify the location of the Chromium binary (this path matches the one in Dockerfile)
 options.binary_location = '/usr/bin/chromium'
 
-# Initialize the Chrome WebDriver (force using the correct driver version for Chromium 131)
-driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="131.0.6778.204").install()), options=options)
+# Initialize the Chrome WebDriver (let ChromeDriverManager handle version automatically)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def scrape_linkedin_jobs():
     driver.get("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
