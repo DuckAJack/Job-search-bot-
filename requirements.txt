@@ -1,12 +1,10 @@
 beautifulsoup4
 requests
 python-telegram-bot
-selenium
-webdriver-manager
 chromium
 chromedriver
-selenium==4.9.0
-webdriver-manager==3.8.4
-chromedriver-autoinstaller==0.3.0
+selenium
+webdriver-manager
+chromedriver-autoinstaller
 packaging
 python-dotenv
