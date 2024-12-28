@@ -39,6 +39,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
 # Set up Chrome options for headless mode
 options = Options()
 options.add_argument('--headless')  # Run Chrome in headless mode
@@ -46,10 +51,11 @@ options.add_argument('--no-sandbox')  # Disable sandboxing for cloud environment
 options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
 
 # Specify the location of the Chrome binary
-options.binary_location = '/usr/bin/chromium'  # Path to the Chromium binary
+options.binary_location = '/usr/bin/chromium'  # Path to the Chromium binary in Docker
 
 # Start Chrome WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 
 def scrape_linkedin_jobs():
     options = Options()
