@@ -7,7 +7,6 @@ import smtplib
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import time
 
@@ -40,8 +39,9 @@ options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
 # Specify the location of the Chromium binary (this path matches the one in Dockerfile)
 options.binary_location = '/usr/bin/chromium'
 
-# Initialize the Chrome WebDriver (let ChromeDriverManager handle version automatically)
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# Initialize the Chrome WebDriver with the correct version of ChromeDriver
+service = Service(executable_path="/usr/local/bin/chromedriver")  # Use the correct ChromeDriver
+driver = webdriver.Chrome(service=service, options=options)
 
 def scrape_linkedin_jobs():
     driver.get("https://www.linkedin.com/jobs/search?keywords=Cisco%20Collaboration%20Engineer&location=Brno")
