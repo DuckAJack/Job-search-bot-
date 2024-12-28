@@ -5,10 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 import smtplib
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 
 # 1. Scrape Jobs from Indeed
@@ -31,18 +31,16 @@ def scrape_indeed_jobs():
     return jobs
 
 # 2. Scrape Jobs from LinkedIn
-from selenium.webdriver.chrome.options import Options
-
 # Set up Chrome options for headless mode
 options = Options()
 options.add_argument('--headless')  # Run Chrome in headless mode
 options.add_argument('--no-sandbox')  # Disable sandboxing for cloud environments
 options.add_argument('--disable-dev-shm-usage')  # Additional option for Render
 
-# Specify the location of the Chrome binary
-options.binary_location = '/usr/bin/chromium'  # Path to the Chromium binary in Docker
+# Specify the location of the Chromium binary (this path matches the one in Dockerfile)
+options.binary_location = '/usr/bin/chromium'
 
-# Initialize the Chrome WebDriver without specifying a version
+# Initialize the Chrome WebDriver (don't specify the version, let `webdriver-manager` handle it)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def scrape_linkedin_jobs():
