@@ -1,14 +1,14 @@
 # Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Use the Selenium Standalone Chrome image
-FROM selenium/standalone-chrome:latest
-
 # Set the working directory in the container
 WORKDIR /opt/render/project/src
 
-# Install system dependencies for Chromium and Selenium
-RUN apt-get update && apt-get install -y \
+# Install system dependencies for Chromium and Chromium Driver
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    ca-certificates \
     chromium \
     chromium-driver \
     libnss3 \
