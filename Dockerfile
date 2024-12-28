@@ -27,7 +27,7 @@ ENV CHROME_BIN=/usr/bin/chromium
 # Download the correct ChromeDriver for Chromium 131 (as the current version of Chromium on the container)
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chrome-linux64.zip \
     && unzip chrome-linux64.zip \
-    && mv chrome-linux64/chromedriver /usr/local/bin/chromedriver \
+    && mv chrome-linux64/ /usr/local/bin/chromedriver \
     && chmod +x /usr/local/bin/chromedriver \
     && rm -rf chrome-linux64.zip chrome-linux64/
     
