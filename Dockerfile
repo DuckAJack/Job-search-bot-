@@ -34,4 +34,4 @@ EXPOSE 8000
 CMD ["python", "job_bot.py"]
 
 #run the bot
-RUN chmod +x /path/to/start.sh
+RUN chmod +x start.sh
