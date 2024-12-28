@@ -4,11 +4,12 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /opt/render/project/src
 
-# Install system dependencies for Chromium and Chromium Driver
+# Install system dependencies for Chromium, Chromium Driver, and unzip
 RUN apt-get update && \
     apt-get install -y \
     wget \
     ca-certificates \
+    unzip \
     chromium \
     chromium-driver \
     libnss3 \
