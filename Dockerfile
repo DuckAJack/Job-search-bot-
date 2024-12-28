@@ -21,15 +21,15 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     && rm -rf /var/lib/apt/lists/*
 
+# Set the environment variable for Chromium binary
+ENV CHROME_BIN=/usr/bin/chromium
+
 # Download the correct ChromeDriver for Chromium 131 (as the current version of Chromium on the container)
-RUN wget https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chrome-linux64.zip \
+RUN wget https://chromedriver.storage.googleapis.com/131.0.6778.204/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
     && mv chromedriver /usr/local/bin/chromedriver \
     && chmod +x /usr/local/bin/chromedriver \
     && rm chromedriver_linux64.zip
-
-# Set the environment variable for Chromium binary
-ENV CHROME_BIN=/usr/bin/chromium
 
 # Set the environment variable for the ChromeDriver path (optional)
 ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
