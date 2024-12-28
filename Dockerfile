@@ -32,3 +32,6 @@ EXPOSE 8000
 
 # Command to run the Python script
 CMD ["python", "job_bot.py"]
+
+#run the bot
+RUN chmod +x /path/to/start.sh
