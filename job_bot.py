@@ -36,8 +36,17 @@ def scrape_indeed_jobs():
 # 2. Scrape Jobs from LinkedIn
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Set up Chrome options for headless mode
+options = Options()
+options.add_argument('--headless')  # Run Chrome in headless mode
+options.add_argument('--no-sandbox')  # Disable sandboxing for cloud environments
+
+# Start Chrome WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 
 def scrape_linkedin_jobs():
     options = Options()
