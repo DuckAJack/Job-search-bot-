@@ -44,6 +44,10 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
+# Specify the version of ChromeDriver that matches the version of Chromium
+chrome_version = "131.0.6778.204"  # This should match the version in the error message
+driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=chrome_version).install()), options=options)
+
 # Set up Chrome options for headless mode
 options = Options()
 options.add_argument('--headless')  # Run Chrome in headless mode
